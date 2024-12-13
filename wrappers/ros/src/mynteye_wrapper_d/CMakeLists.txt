@@ -1,3 +1,6 @@
+if (NOT $ENV{ROS_VERSION} STREQUAL "2")
+  execute_process(COMMAND bash -c "ln -sf ${CMAKE_SOURCE_DIR}/package-ros1.xml ${CMAKE_SOURCE_DIR}/package.xml")
+
 cmake_minimum_required(VERSION 2.8.3)
 project(mynteye_wrapper_d)
 
@@ -115,3 +118,8 @@ install(DIRECTORY rviz
 install(FILES nodelet_plugins.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
+
+else()
+  execute_process(COMMAND bash -c "ln -sf ${CMAKE_SOURCE_DIR}/package-ros2.xml ${CMAKE_SOURCE_DIR}/package.xml")
+  include(ros2.cmake)
+endif()
