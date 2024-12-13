@@ -30,11 +30,29 @@ set(LINK_LIBRARIES
   ${OpenCV_LIBS}
   mynteye_depth
 )
+set(msg_files
+  "msg/Temp.msg"
+)
+
+set(srv_files
+  "srv/GetParams.srv"
+)
+
+rosidl_generate_interfaces(${PROJECT_NAME}_msgs
+  ${msg_files}
+  ${srv_files}
+  DEPENDENCIES builtin_interfaces std_msgs
+  ADD_LINTER_TESTS
+)
+rosidl_get_typesupport_target(cpp_typesupport_target
+    ${PROJECT_NAME}_msgs "rosidl_typesupport_cpp")
 
 ament_auto_add_library(mynteye_wrapper_d
   src/mynteye_wrapper_nodelet.cc
   src/pointcloud_generator.cc
 )
+target_link_libraries(mynteye_wrapper_d "${cpp_typesupport_target}")
+target_include_directories(mynteye_wrapper_d PRIVATE ${PROJECT_NAME}_msgs_INCLUDE_DIRECTORIES)
 target_link_libraries(mynteye_wrapper_d ${LINK_LIBRARIES})
 #add_dependencies(mynteye_wrapper_d ${PROJECT_NAME}_generate_messages_cpp)
 

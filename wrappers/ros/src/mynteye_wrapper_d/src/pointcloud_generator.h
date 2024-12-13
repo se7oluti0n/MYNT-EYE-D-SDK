@@ -20,11 +20,12 @@
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <rclcpp/rclcpp.hpp>
 
 #include <opencv2/core/core.hpp>
 
-#include <sensor_msgs/PointCloud2.h>
-#include <sensor_msgs/point_cloud2_iterator.h>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+//#include <sensor_msgs/msg/point_cloud2_iterator.h>
 
 #include "mynteyed/util/rate.h"
 #include "mynteyed/stubs/types_calib.h"
@@ -36,14 +37,14 @@ MYNTEYE_BEGIN_NAMESPACE
 
 class PointCloudGenerator {
  public:
-  using Callback = std::function<void(sensor_msgs::PointCloud2)>;
+  using Callback = std::function<void(sensor_msgs::msg::PointCloud2)>;
 
   PointCloudGenerator(CameraIntrinsics in, Callback callback,
       double factor = DEFAULT_POINTS_FACTOR,
       std::int32_t frequency = DEFAULT_POINTS_FREQUENCE);
   ~PointCloudGenerator();
 
-  bool Push(const cv::Mat& color, const cv::Mat& depth, ros::Time stamp);
+  bool Push(const cv::Mat& color, const cv::Mat& depth, rclcpp::Time stamp);
 
   double factor() { return factor_; }
   void set_factor(double factor) { factor_ = factor; }
@@ -67,7 +68,7 @@ class PointCloudGenerator {
 
   cv::Mat color_;
   cv::Mat depth_;
-  ros::Time stamp_;
+  rclcpp::Time stamp_;
 
   double factor_;
 
